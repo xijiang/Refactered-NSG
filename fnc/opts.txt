@@ -1,0 +1,5 @@
+Usage: ./run-pipeline.sh option
+
+options:
+    17k:  construct a G matrix with 17k loci, alpha version
+    lmr:  test imputation from 8k to 17k.

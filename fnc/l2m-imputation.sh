@@ -52,6 +52,11 @@ make-imp-files(){
         zcat $a17k/imp/$chr.vcf.gz |
             $bin/subid $1 |
             gzip -c >cmp.$chr.vcf.gz
+
+        # The unimputed genotypes to test
+        zcat $a17k/pre/$chr.vcf.gz |
+            $bin/subid $1 |
+            gzip -c >tst.$chr.vcf.gz
     done
 }
 
@@ -68,7 +73,11 @@ impute-n-compare(){
         $bin/extrgt $l2mT/imputed.snp >cmp.gt
     zcat imp.{1..26}.vcf.gz |
         $bin/extrgt $l2mT/imputed.snp >imp.gt
+    zcat tst.{1..26}.vcf.gz |
+        $bin/extrgt $l2mT/imputed.snp >tst.gt
     paste {cmp,imp}.gt |
+        $bin/cor-err >>$rst
+    paste {cmp,tst}.gt |
         $bin/cor-err >>$rst
 }
 
@@ -90,11 +99,12 @@ test-less2more(){
     make-ref-files ref.id
     
     tail -n+501 shuf.id >pool.id
-    for nto in `seq 50 100 2000`; do
+    for nto in `seq 50 100 200`; do
         cat pool.id |
             shuf |
             head -n $nto >imp.id
         make-imp-files imp.id
+        echo 500 $nto >>$rst
         impute-n-compare
     done
 }

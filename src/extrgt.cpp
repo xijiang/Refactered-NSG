@@ -24,14 +24,15 @@ int main(int argc, char *argv[])
   for(string line; getline(cin, line);)
     if(line[1]!='#') break;	// Break @ the ID line
 
-  for(string line; getline(cin, line); cout<<'\n'){
+  for(string line; getline(cin, line);){
     stringstream ss(line);
     string  tstr[9];
     for(auto i=0; i<9; ++i) ss>>tstr[i];
     if(mskt.find(tstr[2])==mskt.end()) continue; // a shared locus
     else{
       cout<<tstr[2]<<'\t';
-      for(string gt; ss>>gt; cout<<gt[0]<<gt[2]);
+      for(string gt; ss>>gt; cout<<static_cast<int>(gt[0]-'0'+gt[2]));
+      cout<<'\n';
     }
   }
     

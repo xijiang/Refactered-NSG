@@ -36,7 +36,7 @@ prepare-a-working-directory(){
 make-ref-files(){
     for chr in {1..26}; do
         zcat $a17k/imp/$chr.vcf.gz |
-            $bin/subid $1 |
+            $bin/vcf-by-id $1 |
             gzip -c >ref.$chr.vcf.gz
     done
 }
@@ -44,19 +44,14 @@ make-ref-files(){
 make-imp-files(){
     for chr in {1..26}; do      # mask to impute
         zcat $a17k/pre/$chr.vcf.gz |
-            $bin/subid $1 |
+            $bin/vcf-by-id $1 |
             $bin/mskloci $l2mT/ld.snp |
             gzip -c >msk.$chr.vcf.gz
         
         # The 'correct' genotype to compare
         zcat $a17k/imp/$chr.vcf.gz |
-            $bin/subid $1 |
+            $bin/vcf-by-id $1 |
             gzip -c >cmp.$chr.vcf.gz
-
-        # The unimputed genotypes to test
-        zcat $a17k/pre/$chr.vcf.gz |
-            $bin/subid $1 |
-            gzip -c >tst.$chr.vcf.gz
     done
 }
 
@@ -73,11 +68,7 @@ impute-n-compare(){
         $bin/extrgt $l2mT/imputed.snp >cmp.gt
     zcat imp.{1..26}.vcf.gz |
         $bin/extrgt $l2mT/imputed.snp >imp.gt
-    zcat tst.{1..26}.vcf.gz |
-        $bin/extrgt $l2mT/imputed.snp >tst.gt
     paste {cmp,imp}.gt |
-        $bin/cor-err >>$rst
-    paste {cmp,tst}.gt |
         $bin/cor-err >>$rst
 }
 

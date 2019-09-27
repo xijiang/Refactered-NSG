@@ -36,7 +36,7 @@ prepare-a-working-directory(){
 make-ref-files(){
     for chr in {1..26}; do
         zcat $a17k/imp/$chr.vcf.gz |
-            $bin/subid $1 |
+            $bin/vcf-by-id $1 |
             gzip -c >ref.$chr.vcf.gz
     done
 }
@@ -44,19 +44,14 @@ make-ref-files(){
 make-imp-files(){
     for chr in {1..26}; do      # mask to impute
         zcat $a17k/pre/$chr.vcf.gz |
-            $bin/subid $1 |
+            $bin/vcf-by-id $1 |
             $bin/mskloci $l2mT/ld.snp |
             gzip -c >msk.$chr.vcf.gz
         
         # The 'correct' genotype to compare
         zcat $a17k/imp/$chr.vcf.gz |
-            $bin/subid $1 |
+            $bin/vcf-by-id $1 |
             gzip -c >cmp.$chr.vcf.gz
-
-        # The unimputed genotypes to test
-        zcat $a17k/pre/$chr.vcf.gz |
-            $bin/subid $1 |
-            gzip -c >tst.$chr.vcf.gz
     done
 }
 
@@ -73,17 +68,11 @@ impute-n-compare(){
         $bin/extrgt $l2mT/imputed.snp >cmp.gt
     zcat imp.{1..26}.vcf.gz |
         $bin/extrgt $l2mT/imputed.snp >imp.gt
-    zcat tst.{1..26}.vcf.gz |
-        $bin/extrgt $l2mT/imputed.snp >tst.gt
     paste {cmp,imp}.gt |
-        $bin/cor-err >>$rst
-    paste {cmp,tst}.gt |
         $bin/cor-err >>$rst
 }
 
-test-less2more(){
-    prepare-a-working-directory
-    
+fixed2-less2more(){
     # with a fixed set of reference, increase pop size to be imputed.
     # see if the imputation error increases
     wdir=$l2mT/fix2more-n-more
@@ -95,11 +84,11 @@ test-less2more(){
     cat $l2mT/md.id |
         shuf >shuf.id
     
-    head -n 500 shuf.id >ref.id
+    head -n 1000 shuf.id >ref.id
     make-ref-files ref.id
     
-    tail -n+501 shuf.id >pool.id
-    for nto in `seq 50 100 200`; do
+    tail -n+1001 shuf.id >pool.id
+    for nto in `seq 50 100 2000`; do
         cat pool.id |
             shuf |
             head -n $nto >imp.id
@@ -107,4 +96,32 @@ test-less2more(){
         echo 500 $nto >>$rst
         impute-n-compare
     done
+}
+
+
+random-more2less(){
+    wdir=$l2mT/fix2fix
+    mkdir -p $wdir
+    cd $wdir
+    rst=$wdir/rates
+    touch $rst
+
+    for rpt in {1..50}; do
+	cat $l2mT/md.id |
+	    shuf >shuf.id
+	head -n 50 shuf.id >imp.id
+	tail -n+51 shuf.id >ref.id
+	make-imp-files imp.id
+	make-ref-files ref.id
+	echo repeat $rpt >>$rst
+	impute-n-compare
+    done
+}
+
+lmr(){
+    prepare-a-working-directory
+
+    fixed2-less2more
+
+    random-more2less
 }

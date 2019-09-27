@@ -81,7 +81,8 @@ impute-n-compare(){
 
 merge-n-impute(){
     for chr in {1..26}; do
-        vcf-paste <(zcat ref.$chr.vcf.gz) <(zcat msk.$chr.vcf.gz) >one.$chr.vcf.gz
+        $bin/vcf-paste <(zcat ref.$chr.vcf.gz) <(zcat msk.$chr.vcf.gz) |
+            gzip -c >one.$chr.vcf.gz
         java -jar $bin/beagle.jar \
              gt=one.$chr.vcf.gz \
              ne=$ne \
@@ -137,11 +138,11 @@ random-more2less(){
 cmp-1vs2-beagle-file(){
     prepare-a-sub-dir 1vs2-files
 
-    for rpt in {1..50}; do
+    for rpt in {1..20}; do
         cat $l2mT/md.id |
             shuf >shuf.id
-        head -n 500 shuf.id >imp.id
-        tail -n 500 shuf.id >ref.id
+        head -n 100 shuf.id >imp.id
+        tail -n+101 shuf.id >ref.id
         make-imp-files imp.id
         make-ref-files ref.id
         echo repeat $rpt >>$rst
@@ -151,11 +152,11 @@ cmp-1vs2-beagle-file(){
 }
 
 lmr(){
-    # prepare-a-working-directory
-    # 
-    # fixed2-less2more
-    # 
-    # random-more2less
+    prepare-a-working-directory
+    
+    fixed2-less2more
+    
+    random-more2less
 
     cmp-1vs2-beagle-file
 }

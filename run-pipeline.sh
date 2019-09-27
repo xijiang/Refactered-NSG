@@ -5,9 +5,12 @@ else
     echo preparing functions
     . fnc/parameters.sh
     . fnc/functions.sh
-    cd $src
-    make
-    make mv
+
+    if [ ! -f $bin/vcf-paste ]; then
+        cd $src
+        make
+        make mv
+    fi
     cd $base
     
     case "$1" in
@@ -17,7 +20,7 @@ else
 	        ;;
 	    lmr|LMR|Lmr)
 	        source fnc/l2m-imputation.sh
-            test-less2more
+            lmr
 	        ;;
         *)
             cat fnc/opts.txt

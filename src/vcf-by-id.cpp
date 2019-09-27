@@ -16,11 +16,11 @@ public:
     // Header
     while(getline(in, line)){
       if(line[1]!='#'){
-	stringstream ss(line);
-	string id;
-	for(auto i{0}; i<9; ++i) ss>>id;
-	while(ss>>id) ID.push_back(id);
-	break;
+        stringstream ss(line);
+        string id;
+        for(auto i{0}; i<9; ++i) ss>>id;
+        while(ss>>id) ID.push_back(id);
+        break;
       }
       header.push_back(line.substr(2));
     }
@@ -35,8 +35,8 @@ public:
       REF+=ref;
       ALT+=alt;
       for(const auto&id:ID){
-	ss>>sdm;
-	gt[id]+=sdm;
+        ss>>sdm;
+        gt[id]+=sdm;
       }
     }
   }

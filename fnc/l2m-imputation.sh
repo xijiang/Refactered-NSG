@@ -10,9 +10,7 @@ prepare-a-working-directory(){
         impute-17ka-missing-gt
     fi
 
-    if [ -d $l2mT ]; then rm -rf $l2mT; fi
     mkdir -p $l2mT
-    rst=$l2mT/rates.txt
     cd $l2mT
     
     # all ID available
@@ -31,6 +29,15 @@ prepare-a-working-directory(){
     # SNP to be imputed
     cat ld.snp |
         $bin/impsnp md.snp >imputed.snp
+}
+
+prepare-a-sub-dir(){
+    wdir=$l2mT/$1
+    if [ -d $wdir ]; then rm -rf $wdir; fi
+    mkdir -p $wdir
+    cd $wdir
+    rst=$wdir/rates
+    touch $rst
 }
 
 make-ref-files(){
@@ -72,14 +79,28 @@ impute-n-compare(){
         $bin/cor-err >>$rst
 }
 
+merge-n-impute(){
+    for chr in {1..26}; do
+        vcf-paste <(zcat ref.$chr.vcf.gz) <(zcat msk.$chr.vcf.gz) >one.$chr.vcf.gz
+        java -jar $bin/beagle.jar \
+             gt=one.$chr.vcf.gz \
+             ne=$ne \
+             out=x.$chr
+        zcat x.$chr.vcf.gz |
+            $bin/vcf-by-id imp.id |
+            gzip -c >y.$chr.vcf.gz
+    done
+
+    zcat y.{1..26}.vcf.gz |
+        $bin/extrgt $l2mT/imputed.snp >zzz.gt
+    paste {cmp,zzz}.gt |
+        $bin/cor-err >>$rst
+}
+
 fixed2-less2more(){
     # with a fixed set of reference, increase pop size to be imputed.
     # see if the imputation error increases
-    wdir=$l2mT/fix2more-n-more
-    mkdir -p $wdir
-    cd $wdir
-    rst=$wdir/rates
-    touch $rst
+    prepare-a-sub-dir fix2more-n-more
     
     cat $l2mT/md.id |
         shuf >shuf.id
@@ -98,30 +119,43 @@ fixed2-less2more(){
     done
 }
 
-
 random-more2less(){
-    wdir=$l2mT/fix2fix
-    mkdir -p $wdir
-    cd $wdir
-    rst=$wdir/rates
-    touch $rst
+    prepare-a-sub-dir fix2fix
+    
+    for rpt in {1..50}; do
+	    cat $l2mT/md.id |
+	        shuf >shuf.id
+	    head -n 50 shuf.id >imp.id
+	    tail -n+51 shuf.id >ref.id
+	    make-imp-files imp.id
+	    make-ref-files ref.id
+	    echo repeat $rpt >>$rst
+	    impute-n-compare
+    done
+}
+
+cmp-1vs2-beagle-file(){
+    prepare-a-sub-dir 1vs2-files
 
     for rpt in {1..50}; do
-	cat $l2mT/md.id |
-	    shuf >shuf.id
-	head -n 50 shuf.id >imp.id
-	tail -n+51 shuf.id >ref.id
-	make-imp-files imp.id
-	make-ref-files ref.id
-	echo repeat $rpt >>$rst
-	impute-n-compare
+        cat $l2mT/md.id |
+            shuf >shuf.id
+        head -n 500 shuf.id >imp.id
+        tail -n 500 shuf.id >ref.id
+        make-imp-files imp.id
+        make-ref-files ref.id
+        echo repeat $rpt >>$rst
+        impute-n-compare
+        merge-n-impute
     done
 }
 
 lmr(){
-    prepare-a-working-directory
+    # prepare-a-working-directory
+    # 
+    # fixed2-less2more
+    # 
+    # random-more2less
 
-    fixed2-less2more
-
-    random-more2less
+    cmp-1vs2-beagle-file
 }

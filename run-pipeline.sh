@@ -26,6 +26,10 @@ else
             source fnc/606k.sh
             e17k
             ;;
+        w8d)
+            source fnc/8k-17k-w8d.sh
+            new-lmr
+            ;;
         *)
             cat fnc/opts.txt
             ;;

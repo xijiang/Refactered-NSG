@@ -42,14 +42,18 @@ sub-17k(){
         prepare-17ka-dir
         impute-17ka-missing-gt
     fi
-    cd $HDGT/17k
+    mkdir -p $HDGT/17k/{ref,sub}
+    cd $HDGT/17k/
     zcat $a17k/imp/{1..26}.vcf.gz |
         grep -v \# |
         gawk '{print $3}' >17k.snp
     for chr in {1..26}; do
         zcat ../imp/$chr.vcf.gz |
             $bin/vcf-by-loci 17k.snp |
-            gzip -c >$chr.vcf.gz
+            gzip -c >ref/$chr.vcf.gz
+        zcat ../pre/$chr.vcf.gz |
+            $bin/vcf-by-loci 17k.snp |
+            gzip -c >sub/$chr.vcf.gz
     done
 }
 

@@ -6,7 +6,7 @@ else
     . fnc/parameters.sh
     . fnc/functions.sh
 
-    if [ ! -f $bin/vcf-paste ]; then
+    if [ ! -f $bin/vcf-by-loci ]; then
         cd $src
         make
         make mv
@@ -22,6 +22,10 @@ else
 	        source fnc/l2m-imputation.sh
             lmr
 	        ;;
+        6dk)
+            source fnc/606k.sh
+            e17k
+            ;;
         *)
             cat fnc/opts.txt
             ;;

@@ -12,12 +12,12 @@ prepare-17ka-dir(){
     
     # make ID info and map ready
     tail -n+2 $ids/id.lst |
-	    gawk '{if(length($6)>2 && $9==10 && $7>1999) print $6, $2}' >idinfo
+	    gawk '{if(length($6)>2 && $9==10 && $7>1999) print $6, $2}' >17k.id
     
     cat $maps/a17k.map | 
-	    gawk '{print $2, $1, $4}' > mapinfo
+	    gawk '{print $2, $1, $4}' > 17k.map
 
-    $bin/mrg2bgl idinfo mapinfo $gfiles
+    $bin/mrg2bgl 17k.id 17k.map $gfiles
 }
 
 impute-17ka-missing-gt(){

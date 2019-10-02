@@ -6,7 +6,7 @@ else
     . fnc/parameters.sh
     . fnc/functions.sh
 
-    if [ ! -f $bin/vcf-paste ]; then
+    if [ ! -f $bin/vcf-by-loci ]; then
         cd $src
         make
         make mv

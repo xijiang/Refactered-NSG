@@ -118,6 +118,9 @@ fixed2-less2more(){
         echo 500 $nto >>$rst
         impute-n-compare
     done
+    grep 'rate\|ent' rates |
+        gawk '{print $NF}' >num.txt
+    $julia/fix-2-less2more.jl
 }
 
 random-more2less(){
@@ -133,6 +136,9 @@ random-more2less(){
 	    echo repeat $rpt >>$rst
 	    impute-n-compare
     done
+    grep 'rate\|ent' rates |
+        gawk '{print $NF}' >num.txt
+    $julia/fix-2-fix.jl
 }
 
 cmp-1vs2-beagle-file(){
@@ -149,6 +155,9 @@ cmp-1vs2-beagle-file(){
         impute-n-compare
         merge-n-impute
     done
+    grep 'rate\|ent' rates |
+        gawk '{print $NF}' >num.txt
+    $julia/one-vs-two.jl        # creates a figure
 }
 
 lmr(){

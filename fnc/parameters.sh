@@ -6,6 +6,7 @@ ne=100
 func=$base/fnc
 src=$base/src
 bin=$base/bin
+julia=$base/julia
 
 # raw data
 dat=$base/data

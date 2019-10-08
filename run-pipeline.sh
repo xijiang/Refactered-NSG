@@ -14,20 +14,20 @@ else
     cd $base
     
     case "$1" in
-	    17k|17K)
-	        source fnc/17k-alpha.sh
-	        calc-ga17k		# with genotype 17k alpha
-	        ;;
-	    lmr|LMR|Lmr)
-	        source fnc/l2m-imputation.sh
+	17k|17K)
+	    source fnc/17k-alpha.sh
+	    calc-ga17k		# with genotype 17k alpha
+	    ;;
+	lmr|LMR|Lmr)
+	    source fnc/l2m-imputation.sh
             lmr
-	        ;;
+	    ;;
         6dk)
             source fnc/606k.sh
             e17k
             ;;
-        w8d)
-            source fnc/8k-17k-w8d.sh
+        v34)
+            source fnc/v3-vs-v4.sh
             new-lmr
             ;;
         *)

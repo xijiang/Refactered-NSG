@@ -5,23 +5,24 @@
 
 prepare-606k-directory(){
     date
-
-    if [ -d $HDGT ]; then rm -rf $HDGT; fi
-    mkdir -p $HDGT/{pre,imp,17k}
-    cd $HDGT
+    verd=$HDGT/$1		# verd -> version dir
+    
+    if [ -d $verd ]; then rm -rf $verd; fi
+    mkdir -p $verd/{pre,imp,17k}
+    cd $verd
 
     g606k=`ls $genotypes/600k`
-    ln -s $genotypes/600k/* $HDGT/pre
+    ln -s $genotypes/600k/* $verd/pre
 }
 
 impute-few-missing-606(){
-    wdir=$HDGT/pre
+    wdir=$verd/pre
     cd $wdir
 
     tail -n+2 $ids/id.lst |
         gawk '{if(length($4)>2) print $4, $2}' >606k.id
 
-    tail -n+2 $maps/sheep-snpchimp-v.4 |
+    tail -n+2 $maps/sheep-snpchimp.$1 |
         gawk '{print $13, $11, $12}' >606k.map
     
     $bin/mrg2bgl 606k.id 606k.map $g606k
@@ -42,8 +43,8 @@ sub-17k(){
         prepare-17ka-dir
         impute-17ka-missing-gt
     fi
-    mkdir -p $HDGT/17k/{ref,sub}
-    cd $HDGT/17k/
+    mkdir -p $verd/17k/{ref,sub}
+    cd $verd/17k/
     zcat $a17k/imp/{1..26}.vcf.gz |
         grep -v \# |
         gawk '{print $3}' >17k.snp
@@ -58,9 +59,13 @@ sub-17k(){
 }
 
 e17k(){
-    prepare-606k-directory
-    
-    impute-few-missing-606
+    for ver in v3 v4; do
+	echo dealing data according $ver.map
+	
+	prepare-606k-directory $ver
+	
+	impute-few-missing-606 $ver
 
-    sub-17k
+	sub-17k
+    done
 }

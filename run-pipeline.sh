@@ -30,6 +30,10 @@ else
             source fnc/v3-vs-v4.sh
             new-lmr
             ;;
+	8vr)
+	    source fnc/8d-vs-random.sh
+	    8d-v-ran-lmr
+	    ;;
         *)
             cat fnc/opts.txt
             ;;

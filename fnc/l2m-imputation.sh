@@ -169,9 +169,9 @@ cmp-1vs2-beagle-file(){
 lmr(){
     prepare-a-working-directory
     
-    #fixed2-less2more
+    fixed2-less2more
     
     random-more2less
 
-    #cmp-1vs2-beagle-file
+    cmp-1vs2-beagle-file
 }

@@ -27,7 +27,7 @@ reduced-17k-dat-v3(){
     wdir=$l2mT/reduced/v3
     mkdir -p $wdir/{ref,pre}
     cd $wdir
-    zcat $HDGT/v3/17k/ref/{1..26}.vcf.gz |
+    zcat $HDGT/v3/17k/{1..26}.vcf.gz |
         grep -v \# |
         gawk '{print $3}' >17k-at-hd.snp
     for chr in {1..26}; do
@@ -79,7 +79,7 @@ sample-id(){
 
 mask-n-impute(){
     touch cmp.gt imp.gt
-
+    
     for chr in {1..26}; do
 	zcat $l2mT/reduced/$1/ref/$chr.vcf.gz |
 	    $bin/vcf-by-id ../imp.id |
@@ -95,6 +95,7 @@ mask-n-impute(){
             $bin/mskloci $l2mT/ld.snp |
             gzip -c >msk.vcf.gz
         java -jar $bin/beagle.jar \
+	     nthreads=20 \
              ref=ref.vcf.gz \
              gt=msk.vcf.gz \
              ne=$ne \
@@ -105,22 +106,25 @@ mask-n-impute(){
 
     paste {cmp,imp}.gt |
         $bin/cor-err >>rates
+    rm -f {cmp,imp}.gt
 }
 
 l2mr-within-reduced(){
     echo Test map v3 vs v4, which is better
     echo Here I randomly sample 1000 ID from reduced 17k data as reference
     echo sample 50 ID from the rest of the reduced 17k data to be masked
-    echo then impute them back and check imputation rate
-    echo I repeat above 20 times
+    echo then impute the same data set according to map v3 and v4
+    echo to check imputation rate
+    echo I repeat above 10 times
     
     wdir=$l2mT/reduced-ref1k-msk50
     if [ -d $wdir ]; then rm -rf $wdir; fi
     mkdir -p $wdir/{v3,v4}
-    cd $wdir
     cat $l2mT/ld.snp |
-	$bin/impsnp $l2mT/reduced/v3/17k-at-hd.snp >imputed.snp
-    for i in {1..20}; do
+	$bin/impsnp $l2mT/reduced/v3/17k-at-hd.snp >$wdir/imputed.snp
+    for i in {1..10}; do
+	echo Repeat $i, sampling ID
+	cd $wdir
 	sample-id 1000 50
 	cd $wdir/v3
 	touch rates

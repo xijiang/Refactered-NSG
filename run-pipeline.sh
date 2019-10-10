@@ -34,6 +34,10 @@ else
 	    source fnc/8d-vs-random.sh
 	    8d-v-ran-lmr
 	    ;;
+	6vr)
+	    source fnc/nws-hd.sh
+	    6d-v-ran-lmr
+	    ;;
         *)
             cat fnc/opts.txt
             ;;

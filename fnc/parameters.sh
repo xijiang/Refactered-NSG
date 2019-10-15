@@ -20,3 +20,4 @@ work=$base/work
 a17k=$work/17k-alpha
 l2mT=$work/l2m-imputation-test
 HDGT=$work/606k-related
+QCD=$work/qcd-17k

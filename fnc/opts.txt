@@ -7,3 +7,5 @@ options:
     v34:  check v3 and v4, which is better
     8vr:  check if using 828 ID results gives better imputation
     6vr:  check if using 622 ID, i.e., NWS after 1999, is better
+    qcd:  quality control of each 17k genotyped individual
+    

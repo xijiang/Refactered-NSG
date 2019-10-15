@@ -16,7 +16,6 @@ prepare-data() {
 	if [ -d $QCD ]; then rm -rf $QCD; fi
 	mkdir -p $QCD
 	cd $QCD
-	touch rst.txt # put temporary comparison results here
 }
 
 get-ID-n-SNP() {
@@ -24,6 +23,7 @@ get-ID-n-SNP() {
 		grep CHROM |
 		tr '\t' '\n' |
 		tail -n+10 >17k.id
+	split -l 240 -d 17k.id
 	zcat $a17k/pre/{1..26}.vcf.gz |
 		grep -v \# |
 		gawk '{print $3}' >17k.snp
@@ -41,6 +41,7 @@ get-ID-n-SNP() {
 		tail -n+2 >tmp
 	paste 17k.snp tmp |
 		sort -nk2 >missing.onsnp
+	rm tmp
 	# Perhaps where a locus is missing many genotypes is not very important
 	# as they can be imputed back anyway.
 	# But an ID missing many loci is not acceptable.
@@ -50,29 +51,28 @@ qc-on-id() {
 	# now do the imputation test for quality
 	# window=200 is critical here for speed.  It affect memory usage according to the manual
 	while read ID; do
+		echo -n $ID\ >>$1.rst
 		zcat $a17k/imp/{1..26}.vcf.gz |
 			$bin/vcf-excl $ID |
-			pigz -c >ref.vcf.gz # also create a cmp.vcf file for comparision
-		grep -v \# cmp.vcf |
-			gawk '{print $NF}' >2
-		# for i in {0..2}; do			# mask every third SNP, start from $i
-		cat cmp.vcf |
-			$bin/msk-eth 1 5 >msk.vcf
-		java -Xmx36G -jar $bin/beagle.jar \
-			ref=ref.vcf.gz \
-			gt=msk.vcf \
+			gzip -c >$ID.ref.vcf.gz # also create a $ID.vcf file for comparision
+		grep -v \# $ID.vcf |
+			gawk '{print $NF}' >$ID.2
+		cat $ID.vcf |
+			$bin/msk-eth 1 5 >$ID.msk.vcf
+		java -Xmx2G -jar $bin/beagle.jar \
+			ref=$ID.ref.vcf.gz \
+			gt=$ID.msk.vcf \
 			window=200 \
-			nthreads=20 \
+			nthreads=1 \
 			ne=$ne \
-			out=imp
-		zcat imp.vcf.gz |
+			out=$ID.imp
+		zcat $ID.imp.vcf.gz |
 			grep -v \# |
-			gawk '{print $NF}' >1
-		paste 1 2 |
-			$bin/ivcf-cmp 1 5 >>rst.txt
-		rm imp.*
-		# done
-	done <17k.id
+			gawk '{print $NF}' >$ID.1
+		paste $ID.{1,2} |
+			$bin/ivcf-cmp 1 5 >>$1.rst
+		rm $ID.*
+	done <$1
 }
 
 post-analysis() {
@@ -89,5 +89,9 @@ post-analysis() {
 quanlity-control() {
 	prepare-data
 	get-ID-n-SNP
-	qc-on-id
+	for idset in x{00..19}; do
+		touch $idset.rst
+		qc-on-id $idset &
+	done
+	wait
 }

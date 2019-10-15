@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
   string line, loc;
   string tid(argv[1]); // The test ID
   int iid{0};          //ID to be tested
-  ofstream fout("cmp.vcf");
+  ofstream fout(string(argv[1])+".vcf");
   // Dealing with headers and find the position of the ID to be tested
   while (getline(cin, line))
   {

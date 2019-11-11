@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 /*
@@ -13,17 +15,31 @@ int main(int argc, char*argv[]){
         cerr<<"t: to mask loci every t-th";
         return 1;
     }
-    int ith(stoi(argv[1])), tt(stoi(argv[2])), cnt{0};
+    int ith(stoi(argv[1])), tt(stoi(argv[2])), cnt{-1};
+    ofstream foo("imputed.snp");
+    
     if(ith<0 || ith>=tt || tt<2){
         cerr<<"Wrong mask description\n";
         return 2;
     }
     for(string line; getline(cin, line);){
-        if(line[0]!='#'){
-            size_t len(line.length());
-            if(cnt%tt == ith) line.replace(len-3, 3, "./.");
-            else line[len-2]='/';
-            ++cnt;
+        if(line[0] == '#') {
+            cout<<line<<'\n';
+            continue;
+        }
+        ++cnt;
+        if(cnt%tt == ith){
+            stringstream ss(line);
+            string seg;
+            ss>>seg;
+            cout<<seg;
+            for(auto i{1}; i<9; ++i) {
+                ss>>seg;
+                cout<<'\t'<<seg;
+		if(i==2) foo<<seg<<'\n';
+            }
+            while(ss>>seg) cout<<"\t./.";
+            cout<<'\n';
         }
         cout<<line<<'\n';
     }

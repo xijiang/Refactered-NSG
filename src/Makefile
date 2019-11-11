@@ -3,7 +3,7 @@ THREAD = ${CXXFLAGS} -pthread
 
 target=latest-beagle mrg2bgl vcf2g vr1g g2-3c impsnp mskloci extrgt cor-err \
 	   vcf-by-id vcf-paste vcf-by-loci missing-rt snpmatch vcfsort vcf-stat \
-	   vcf-excl msk-eth ivcf-cmp qerr-mrg
+	   vcf-excl msk-ith ivcf-cmp qerr-mrg to-v4
 
 all:    ${target}
 

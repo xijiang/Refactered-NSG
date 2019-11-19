@@ -9,7 +9,7 @@ the-latest-beagle(){
     # So, I ordered them on yymmdd, and return the absolute address
     # of the latest Beagle.
 
-    echo -n https://faculty.washington.edu/browning/beagle/
+    #echo -n https://faculty.washington.edu/browning/beagle/
     curl -sl https://faculty.washington.edu/browning/beagle/ |
         grep beagle.*jar |
         gawk -F\" '{print $6}' |
@@ -20,11 +20,19 @@ the-latest-beagle(){
 
 get-beagle-related(){
     beagle=`the-latest-beagle`
+    echo Current version $beagle
     mkdir -p $bin
     cd $bin
-    curl $beagle -o beagle.jar
-    echo  Beagle used: $beagle
+    if [ ! -f $beagle ]; then
+	curl https://faculty.washington.edu/browning/beagle/$beagle -o $beagle
+    fi
+    
+    if [ -f beagle.jar ]; then rm -f beagle.jar; fi
+    ln -s $beagle beagle.jar
 
-    wget https://faculty.washington.edu/browning/beagle_utilities/beagle2vcf.jar
+    if [ ! -f beagle2vcf.jar ]; then
+    	wget https://faculty.washington.edu/browning/beagle_utilities/beagle2vcf.jar
+    fi
+    
     cd $base
 }

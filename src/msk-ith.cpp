@@ -40,7 +40,7 @@ int main(int argc, char*argv[]){
             }
             while(ss>>seg) cout<<"\t./.";
             cout<<'\n';
-        }
-        cout<<line<<'\n';
+        }else
+	  cout<<line<<'\n';
     }
 }

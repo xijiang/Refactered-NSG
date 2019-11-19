@@ -3,7 +3,7 @@ prepare-17ka-dir(){
     date
     echo Prepare directory and files
     if [ -d $a17k ]; then rm -rf $a17k; fi
-    mkdir -p $a17k/{pre,imp}
+    mkdir -p $a17k/pre
     cd $a17k/pre
 
     # link the available genotype files here
@@ -13,26 +13,26 @@ prepare-17ka-dir(){
     # make ID info and map ready
     tail -n+2 $ids/id.lst |
 	    gawk '{if(length($6)>2 && $9==10 && $7>1999) print $6, $2}' >17k.id
-    
-    cat $maps/a17k.map | 
-	    gawk '{print $2, $1, $4}' > 17k.map
 
-    $bin/mrg2bgl 17k.id 17k.map $gfiles
+    $bin/mrg2bgl 17k.id $maps/17k.map $gfiles
 }
 
-impute-17ka-missing-gt(){
+create-one-vcf(){
     ##################################################
     date
-    echo Impute the missing genotypes
+    echo Convert to vcf format and merge to one file
     for chr in {26..1}; do
     	java -jar $bin/beagle2vcf.jar $chr $chr.mrk $chr.bgl - |
             gzip -c >$chr.vcf.gz
-
-        java -jar $bin/beagle.jar \
-             gt=$chr.vcf.gz \
-             ne=$ne \
-             out=../imp/$chr
     done
+
+    cd $a17k
+    
+    zcat pre/1.vcf.gz |
+	grep \# >ori.vcf
+    zcat pre/{1..26}.vcf.gz |
+	grep -v \# >>ori.vcf
+    pigz ori.vcf
 }
 
 calculate-17ka-G(){
@@ -51,10 +51,8 @@ calculate-17ka-G(){
 	    $bin/g2-3c 17k-a.G.id >17k-a.3c
 }
 
-calc-ga17k(){
+merge-17k(){
     prepare-17ka-dir
 
-    impute-17ka-missing-gt
-
-    calculate-17ka-G
+    create-one-vcf
 }

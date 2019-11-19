@@ -60,11 +60,11 @@ stride-on-snp(){
     # every ID will be imputed on different loci 5 times.
     cd $QCD
     
-    for rpt in {0..9}; do
+    for rpt in {0..3}; do
 	cd $QCD
 	
 	echo Thread $rpt has been sent to background
-	$func/stride-on-snp.sh $rpt $base >/dev/null &
+	$func/stride-on-snp.sh $rpt $base
     done
     wait
 }

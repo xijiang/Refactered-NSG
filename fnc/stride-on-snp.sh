@@ -28,8 +28,8 @@ for grp in x*; do
 	$bin/vcf-by-id ref |
 	gzip -c >ref.vcf.gz
 
-    java -Xmx2G -jar $bin/beagle.jar \
-	 nthreads=2 \
+    java -Xmx4G -jar $bin/beagle.jar \
+	 nthreads=4 \
 	 ref=ref.vcf.gz \
 	 gt=msk.vcf.gz \
 	 ne=$ne \

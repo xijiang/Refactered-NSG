@@ -102,28 +102,37 @@ fixed2-less2more(){
     # with a fixed set of reference, increase pop size to be imputed.
     # see if the imputation error increases
     prepare-a-sub-dir fix2more-n-more
+    nfix=1000
+    ntel=1001
     
     cat $l2mT/md.id |
         shuf >shuf.id
     
-    head -n 1000 shuf.id >ref.id
+    head -n $nfix shuf.id >ref.id
     make-ref-files ref.id
     
-    tail -n+1001 shuf.id >pool.id
-    for nto in `seq 50 100 2000`; do
+    tail -n+$ntel shuf.id >pool.id
+    for nto in `seq 50 100 1950`; do
         cat pool.id |
             shuf |
             head -n $nto >imp.id
         make-imp-files imp.id
-        echo 500 $nto >>$rst
+	echo
+	echo ==================================================
+	echo $nfix $nto
+	echo ==================================================
+        echo $nfix $nto >>$rst
         impute-n-compare
     done
+    grep 'rate\|ent' rates |
+        gawk '{print $NF}' >num.txt
+    $julia/fix-2-less2more.jl
 }
 
 random-more2less(){
     prepare-a-sub-dir fix2fix
     
-    for rpt in {1..50}; do
+    for rpt in {1..20}; do
 	    cat $l2mT/md.id |
 	        shuf >shuf.id
 	    head -n 50 shuf.id >imp.id
@@ -133,6 +142,9 @@ random-more2less(){
 	    echo repeat $rpt >>$rst
 	    impute-n-compare
     done
+    grep 'rate\|ent' rates |
+        gawk '{print $NF}' >num.txt
+    $julia/fix-2-fix.jl
 }
 
 cmp-1vs2-beagle-file(){
@@ -149,6 +161,9 @@ cmp-1vs2-beagle-file(){
         impute-n-compare
         merge-n-impute
     done
+    grep 'rate\|ent' rates |
+        gawk '{print $NF}' >num.txt
+    $julia/one-vs-two.jl        # creates a figure
 }
 
 lmr(){

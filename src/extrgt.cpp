@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     if(mskt.find(tstr[2])==mskt.end()) continue; // a shared locus
     else{
       cout<<tstr[2]<<'\t';
-      for(string gt; ss>>gt; cout<<static_cast<int>(gt[0]-'0'+gt[2]));
+      for(string gt; ss>>gt; cout<<static_cast<char>(gt[0]-'0'+gt[2]));
       cout<<'\n';
     }
   }

@@ -60,13 +60,14 @@ stride-on-snp(){
     # every ID will be imputed on different loci 5 times.
     cd $QCD
     
-    for rpt in {0..3}; do
+    #for rpt in {0..9}; do
+    rpt=1
 	cd $QCD
-	
+
 	echo Thread $rpt has been sent to background
-	$func/stride-on-snp.sh $rpt $base
-    done
-    wait
+	$func/stride-on-snp.sh $rpt $base >$rpt.log #&
+    #done
+    #wait
 }
 
 hardy-weinberg-test(){
@@ -78,6 +79,17 @@ hardy-weinberg-test(){
 
 qc-summarize(){
     echo ToDo: summarize the results.
+    cd $QCD/rst
+    if [ -f summary.txt ]; then rm summary.txt; fi
+    for i in *bz2; do
+	tar xvf $i
+	grp=`echo $i | gawk -F. '{print $2}'`
+	$bin/qc-2d cmp.gt imp.gt $grp >>summary.txt
+	rm cmp.gt imp.gt $grp
+    done
+
+    cat summary.txt | $bin/qc-2d-sum
+    
     # I will summarize the results into a table
     # each element is (error times)/(imputed times)
     # read the results into Julia DataFrames
@@ -90,14 +102,6 @@ quality-control-17k(){
     prepare-data
     general-statisitcs
     stride-on-snp
-}
-
-
-qc-debug(){
-    cd $QCD
-    rm -rf rst *tmp
-    
-    mkdir rst tmp
-    cd tmp
-    qc-one-repeat 1
+    #$func/stride-on-snp.sh 1 $base
+    #qc-summarize
 }

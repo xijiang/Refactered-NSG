@@ -2,10 +2,12 @@
 . $2/fnc/parameters.sh $2
 
 rpt=$1
-if [ -d $rpt.tmp ]; then rm -rf $rpt.tmp; fi
+qwrk=$QCD/$rpt.tmp
 
-mkdir $rpt.tmp
-cd $rpt.tmp
+if [ -d $qwrk ]; then rm -rf $qwrk; fi
+
+mkdir -p $qwrk
+cd $qwrk
 
 cat $QCD/17k.id |
     shuf |
@@ -28,7 +30,7 @@ for grp in x*; do
 	$bin/vcf-by-id ref |
 	gzip -c >ref.vcf.gz
 
-    java -Xmx4G -jar $bin/beagle.jar \
+    java -ea -Xmx3G -jar $bin/beagle.jar \
 	 nthreads=4 \
 	 ref=ref.vcf.gz \
 	 gt=msk.vcf.gz \

@@ -2,7 +2,13 @@ Usage: ./run-pipeline.sh option
 
 options:
 
+    ######################################################################
+    -------------------- on program preparation --------------------
+
     bgl:  download the latest beagle.jar
+
+    ######################################################################
+    -------------------- dealing with 17k genotypes --------------------
     
     m17:  merge genotypes from 17k-alpha chips
     
@@ -10,19 +16,20 @@ options:
     
     f17:  filter out ID and SNP not passed in q17.
 
+    ######################################################################
+    -------------------- Dealing with 8k genotypes --------------------
+    
     m8k:  merge 8k data into one file
 
     q8k:  quality control of 8k genotypes
 
     f8k:  filter out ID and SNP not passed in q17
 
-    ilm:  imputation (filtered) 8k genotypes to (filtered) 17k genotypes
-
-Below are to be re-organized. Don't use them now.
-    g17:  construct a G matrix with 17k loci, alpha version
-    lmr:  test imputation from 8k to 17k.
-    6dk:  prepare the genotype data on 606k, extract 17k loci for imputation
-    v34:  check v3 and v4, which is better
-    8vr:  check if using 828 ID results gives better imputation
-    6vr:  check if using 622 ID, i.e., NWS after 1999, is better
+    ######################################################################
+    -------------------- Imputation --------------------
     
+    i12:  imputation (filtered) 8k genotypes to (filtered) 17k genotypes
+
+    ######################################################################
+    -------------------- Gmatrix --------------------
+    gmt:  calculate a G matrix in 3-col format on all, or specified ID

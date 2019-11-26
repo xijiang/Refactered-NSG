@@ -21,6 +21,7 @@ ids=$dat/ids
 
 # work dir
 work=$base/work
+qcblksize=10			# this usually doesn't need change
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ## Don't touch above
@@ -30,18 +31,13 @@ work=$base/work
 a17k=$work/17k-alpha
 
 ### Quality control
-QCD=$a17k/qcd			# QCD: quality control directory
-qcblksize=10			# this usually doesn't need change
-grpsize=44			# as 44*109 == 4796, the current n-ID
-#qcrepeat=5			# I have 24 threads 5 x 4 < 24
-#qcthread=4			# 4 x 5 < 24 as in above line
+grpsz17k=44			# as 44*109 == 4796, the current n-ID
 
 ## 8k genotypes related
 g8k=$work/8k
 
 ### Quality control
-q8k=$g8k/qcd
-
+grpsz8k=50			# as 50*113 == 5650
 
 ## Other
 l2mT=$work/l2m-imputation-test

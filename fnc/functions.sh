@@ -117,7 +117,7 @@ qc-summarize(){
     if [ -f summary.txt ]; then rm summary.txt; fi
     for i in *bz2; do
 	tar xvf $i
-	grp=`echo $i | gawk -F. '{print $2}'`
+	grp=`echo $i | gawk -F. '{print $1}'`
 	$bin/qc-2d cmp.gt imp.gt $grp >>summary.txt
 	rm cmp.gt imp.gt $grp
     done

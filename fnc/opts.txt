@@ -5,16 +5,7 @@ options:
     ######################################################################
     -------------------- on program preparation --------------------
 
-    bgl:  download the latest beagle.jar
-
-    ######################################################################
-    -------------------- dealing with 17k genotypes --------------------
-    
-    m17:  merge genotypes from 17k-alpha chips
-    
-    q17:  quality control of each 17k genotyped individual
-    
-    f17:  filter out ID and SNP not passed in q17.
+    bgl:  download the latest beagle.jar.  Also prepare binaries
 
     ######################################################################
     -------------------- Dealing with 8k genotypes --------------------
@@ -26,10 +17,22 @@ options:
     f8k:  filter out ID and SNP not passed in q17
 
     ######################################################################
+    -------------------- dealing with 17k genotypes --------------------
+    
+    m17:  merge genotypes from 17k-alpha chips
+    
+    q17:  quality control of each 17k genotyped individual
+    
+    f17:  filter out ID and SNP not passed in q17.
+
+    ######################################################################
     -------------------- Imputation --------------------
     
     i12:  imputation (filtered) 8k genotypes to (filtered) 17k genotypes
 
     ######################################################################
     -------------------- Gmatrix --------------------
+
     gmt:  calculate a G matrix in 3-col format on all, or specified ID
+    	  usage: ./run-pipeline.sh gmt a b c d
+	  see my documentation on option gmt

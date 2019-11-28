@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-if [ $# != 1 ]; then
+if [ $# == 0 ]; then
     cat fnc/opts.txt
 else
     echo preparing functions
@@ -49,9 +49,18 @@ else
 	    ;;
 	#################### imputation
 	i12)
+	    echo Imputation from 8k to 17k
+	    # using only the filtered data
 	    ;;
 	#################### Gmatrix
 	gmt)
+	    if [ $# != 5 ]; then
+		echo
+		grep gmt fnc/opts.txt
+		exit 1
+	    fi
+	    source fnc/calc-g-mat.sh
+	    calc-g $2 $3 $4 $5
 	    ;;
 	*)
             cat fnc/opts.txt

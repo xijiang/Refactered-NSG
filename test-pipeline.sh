@@ -40,7 +40,7 @@ else
 	    #qc-debug
             ;;
 	*)
-            cat fnc/test-log.txt
+            cat fnc/test.txt
 	    ;;
     esac
 fi

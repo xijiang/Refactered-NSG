@@ -281,7 +281,7 @@ Management is similar to above.
 
 ## Codes
 
-All my relevant codes has a repo on https://github.com/xijiang/Refactered-NSG. Later, I will release my codes in format `v1.0`, `v2.2`, etc. You can later run below in `base`:
+All my relevant codes has a repo on https://github.com/xijiang/Refactored-NSG. Later, I will release my codes in format `v1.0`, `v2.2`, etc. You can later run below in `base`:
 
 ```bash
 ./run-pipeline.sh update

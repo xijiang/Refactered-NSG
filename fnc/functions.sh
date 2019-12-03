@@ -37,6 +37,18 @@ get-beagle-related(){
     cd $base
 }
 
+show-help(){
+    required="pandoc most pigz"
+    for prg in $requred; do
+	if [ ! -x command -v $prg ]; then
+	    echo Please install $prg
+	fi
+    done
+    pandoc -st man fnc/opts.md |
+	groff -T utf8 -man |
+	most
+}
+
 ########################################
 ## Functions for quality control
 ##--------------------------------------
@@ -94,7 +106,6 @@ stride-on-snp(){
 	    gzip -c >ref.vcf.gz
 
 	java -ea -Xmx3G -jar $bin/beagle.jar \
-	     nthreads=4 \
 	     ref=ref.vcf.gz \
 	     gt=msk.vcf.gz \
 	     ne=$ne \

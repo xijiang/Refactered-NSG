@@ -1,9 +1,3 @@
-Usage: ./run-pipeline.sh option
-
-options:
-    bgl:  download the latest beagle.jar
-    m17:  merge genotypes from 17k-alpha chips
-    q17:  quality control of each 17k genotyped individual
     g17:  construct a G matrix with 17k loci, alpha version
     lmr:  test imputation from 8k to 17k.
     6dk:  prepare the genotype data on 606k, extract 17k loci for imputation

@@ -7,14 +7,14 @@
 # Currently I run this for physical map version 3
 # But This will be a general test procedure, and should work smoothly on version 4.
 
-prepare-data() {
-    if [ ! -d $a17k ]; then
-	source $base/fnc/merge-17k-gt-in-design-format.sh
-	merge-17k
+prepare-data-8k() {
+    if [ ! -d $g8k ]; then
+	source $base/fnc/merge-8k-gt.sh
+	merge-8k-genotypes
     fi
     if [ -d $qcd ]; then rm -rf $qcd; fi
     mkdir -p $qcd/rst
-    cd $a17k
+    cd $g8k
     if [ ! -f ref.vcf.gz ]; then
 	java -jar $bin/beagle.jar \
 	     nthreads=4 \
@@ -24,13 +24,14 @@ prepare-data() {
     fi
 }
 
-quality-control-17k(){
-    qcd=$a17k/qcd
-    prepare-data
+quality-control-8k(){
+    qcd=$g8k/qcd
+
+    prepare-data-8k
     cd $qcd
     general-statisitcs
     cd $qcd
-    stride-on-snp $grpsz17k
+    stride-on-snp $grpsz8k
     cd $qcd
     qc-summarize
 }

@@ -8,7 +8,7 @@ Documentation for the NSG codes
 * Ås
 
 # Prerequisites
-1. `pigz`, `sudo dnf install pigz -y`
+1. `pigz`, `sudo dnf install pigz -y`. Note, `dnf` is for Fedora, CentOS 8. On CentOS 7, use `yum`. On Debian, Ubuntu, use `apt-get`.
 2. `g++`, the version should support standard 17
 3. `plink`, in `~/.local/bin`, and in `$PATH`.
 4. `julia`, version > 1.0, with package `Plots`, `Statistics`
@@ -56,12 +56,12 @@ I will skip `~/GS` below. If declared otherwise, the default directory is `~/GS/
 ## General options
 ### Show version information
 ```bash
-./run-pipeline ver
+./run-pipeline.sh ver
 ```
 
 ### Upgrade to the latest version
 ```bash
-git update
+./run-pipeline.sh update
 ```
 This pipeline will pull the latest version of my codes. It also remove, if exists, binaries. The the binaries are re-compiled.
 

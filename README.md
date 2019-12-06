@@ -139,6 +139,14 @@ Then in the `base` directory, run
 
 The results are stored in `work/17k-alpha/flt`. File `flt.vcf.gz` has the unphased genotypes. File `ref.vcf.gz` is a phased version.
 
+### Test imputatin from 8k to 17k
+
+This is to compare imputation error rates between before and after my QC. It also reports quality of individual ID and SNP results, beside a gereral report. Before, the imputation error rates were about 4%.
+
+```bash
+run-pipeline.sh tlm
+```
+
 ### Quality control of 8k genotypes
 
 Quality control of the 8k data follows the same file structure as 17k, except the files are now in directory `8k`. Typically in `base`, you run:

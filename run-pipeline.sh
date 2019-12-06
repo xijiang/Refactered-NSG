@@ -16,7 +16,7 @@ else
 
     case "$1" in
 	ver)
-	    git branch
+	    git describe --tags
 	    ;;
 	update)
 	    rm -rf $bin
@@ -55,6 +55,9 @@ else
 	    mkdir -p $a17k/flt
 	    cd $a17k/flt
 	    filter-id-snp
+	    ;;
+	tlm)
+	    echo test
 	    ;;
 	#################### 606k genotypes
 	m6d)

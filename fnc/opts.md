@@ -9,7 +9,8 @@
 
 # OPTIONS
   - Code preparation
-    - *bgl*: Download the latest beagle.jar.  Also prepare binaries of my codes
+    - *ver*: Showing the current version of Xijiang's codes
+    - *update*: Download the latest release.  Also prepare binaries of my codes
   - Genotype manipulatiions
     - Dealing with genotypes with 8k chips
       - *m8k*: Merge the genotypes from 8k chips, into one VCF file.
@@ -19,6 +20,7 @@
       - *m17*: merge genotypes from 17k-alpha chips, into one VCF file
       - *q17*: quality control of the created VCF file
       - *f17*: filter out ID and SNP, which you **must specify manually**
+      - *tlm*: test imputation from 8k to 17k.
     - Dealing with genotypes with 606k chips
       - *m6d*: merge genotypes with 606k chips
       - *q6d*: quality control of elements in ID by SNP

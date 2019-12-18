@@ -17,7 +17,7 @@ prepare-data-8k() {
     cd $g8k
     if [ ! -f ref.vcf.gz ]; then
 	java -jar $bin/beagle.jar \
-	     nthreads=4 \
+	     nthreads=$nthreads \
 	     gt=ori.vcf.gz \
 	     ne=$ne \
 	     out=ref

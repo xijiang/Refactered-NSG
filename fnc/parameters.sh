@@ -30,6 +30,8 @@ qcblksize=10			# this usually doesn't need change
 ##==============================================================================
 ## Quality control and filtering
 ##------------------------------------------------------------------------------
+nthreads=12
+
 ## 8k genotypes related
 g8k=$work/8k
 
@@ -41,7 +43,12 @@ grpsz8k=50			# as 50*113 == 5650
 a17k=$work/17k-alpha
 
 ### Quality control
-grpsz17k=44			# as 44*109 == 4796, the current n-ID
+grpsz17k=51			# before 44*109 == 4796. now 51x108.=5503
+refsz=4000			# use 4000 ID as reference to impute masked rest
+
+##------------------------------------------------------------------------------
+## 17k beta data
+b17k=$work/beta-17k
 
 ##------------------------------------------------------------------------------
 ## 606k genotypes related

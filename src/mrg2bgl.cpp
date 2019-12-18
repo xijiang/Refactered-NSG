@@ -23,7 +23,7 @@ using VST=vector<string>;
 
 
 void readid(MSS&idmap, string file){
-  // Read ID sample number and its herd book number
+  // Read ID sample number and its herd book number (actually now is AnimalID)
   ifstream fin(file);
   for(string sample, hbn; fin>>sample>>hbn;) idmap[sample]=hbn;
 }
@@ -50,7 +50,6 @@ void readrw(VST&ID, MSS&idmap, MSS&genotype, string file){
       vid.push_back(true);
       ID.push_back(idmap[id]);
     }else vid.push_back(false);
-
   for(string snp; fin>>snp;){
     getline(fin, line);
     stringstream tt(line);
@@ -72,7 +71,6 @@ void putID(VST&ID){
   ofstream foo("gmat.id");
   for(const auto&id:ID) foo<<id<<'\n';
 }
-
 
 
 void putCHR(string chr, VST&ID, VLC&lmap, MSS&genotype){

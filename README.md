@@ -147,6 +147,14 @@ This is to compare imputation error rates between before and after my QC. It als
 run-pipeline.sh tlm
 ```
 
+### Prepare 17k$\beta$ genotypes
+
+There is only one file of this type.  Run:
+```
+./run-pipelin.sh b17
+```
+To prepare a VCF file. No quality control was planned on these ~200ID
+
 ### Quality control of 8k genotypes
 
 Quality control of the 8k data follows the same file structure as 17k, except the files are now in directory `8k`. Typically in `base`, you run:

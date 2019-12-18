@@ -167,5 +167,26 @@ filter-id-snp(){
 	 out=ref >beagle.log
     echo The filtered and phased results are stored in ref.vcf.gz
 }
+
+exclude-list(){
+    echo
+    echo Note: exclude.id and exclude.snp will be created.
+    echo If you have other ID and SNP to be excluded,
+    echo you have to specify them before this procedure.
+    echo 
+    if [ -f ../qcd/rst/ID.qc ]; then
+	sort -nk2 ../qcd/rst/ID.qc |
+	    gawk '{if($2>.2) print $1}' >>exclude.id
+    else
+	echo Have you run the QC pipeline?
+    fi
+    if [ -f ../qcd/rst/SNP.qc ]; then
+	sort -nk2 ../qcd/rst/SNP.qc |
+	    gawk '{if($2>.15) print $1}' >>exclude.snp
+    else
+	echo Have you run the QC pipeline?
+    fi
+done
+
 ##^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ########################################

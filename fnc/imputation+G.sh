@@ -43,5 +43,5 @@ i-n-g(){
 	tr '\t' '\n' |
 	tail -n+10 > list.id
     cat G.mat |
-	$bin/g2-3c >$gmat
+	$bin/g2-3c list.id >$gmat
 }

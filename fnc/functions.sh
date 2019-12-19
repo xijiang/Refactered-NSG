@@ -106,6 +106,7 @@ stride-on-snp(){
 	    gzip -c >ref.vcf.gz
 
 	java -ea -Xmx3G -jar $bin/beagle.jar \
+	     nthreads=$nthreads \
 	     ref=ref.vcf.gz \
 	     gt=msk.vcf.gz \
 	     ne=$ne \
@@ -146,14 +147,8 @@ filter-id-snp(){
     fi
 
     touch exclude.{snp,id}	# empty if not specified before
-    cat ../qcd/id.lst exclude.id |
-	sort |
-	uniq -c |
-	gawk '{if($1==1) print $2}' >keep.id
-    cat ../qcd/snp.lst exclude.snp |
-	sort |
-	uniq -c |
-	gawk '{if($1==1) print $2}' >keep.snp
+    comm -23 <(sort ../qcd/id.lst) <(sort exclude.id) >keep.id
+    comm -23 <(sort ../qcd/snp.lst) <(sort exclude.snp) >keep.snp
     
     zcat ../ori.vcf.gz |
 	$bin/vcf-by-id keep.id |
@@ -180,13 +175,14 @@ exclude-list(){
     else
 	echo Have you run the QC pipeline?
     fi
+    
     if [ -f ../qcd/rst/SNP.qc ]; then
 	sort -nk2 ../qcd/rst/SNP.qc |
 	    gawk '{if($2>.15) print $1}' >>exclude.snp
     else
 	echo Have you run the QC pipeline?
     fi
-done
+}
 
 ##^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ########################################

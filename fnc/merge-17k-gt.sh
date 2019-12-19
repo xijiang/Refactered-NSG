@@ -2,19 +2,28 @@ prepare-17ka-dir(){
     ##################################################
     date
     echo Prepare directory and files
-    if [ -d $a17k ]; then rm -rf $a17k; fi
-    mkdir -p $a17k/pre
-    cd $a17k/pre
+    if [ -d $a17k ]; then
+	response=
+	echo
+	echo $a17k exists.  Are you sure you want to re-do it? [yes / other]
+	read response
+	if [ $response == yes ]; then
+	    rm -rf $a17k
+	    light=green
+	    mkdir -p $a17k/pre
+	    cd $a17k/pre
 
-    # link the available genotype files here
-    gfiles=`ls $genotypes/a17k/`
-    ln -s $genotypes/a17k/* .
-    
-    # make ID info and map ready
-    tail -n+2 $ids/id.lst |
-	    gawk '{if(length($6)>2 && $9==10 && $7>1999) print $6, $2}' >17k.id
+	    # link the available genotype files here
+	    gfiles=`ls $genotypes/a17k/`
+	    ln -s $genotypes/a17k/* .
+	    
+	    # make ID info and map ready
+	    tail -n+2 $ids/id.lst |
+		gawk '{if(length($6)>2 && $9==10 && $7>1999) print $6, $2}' >17k.id
 
-    $bin/mrg2bgl 17k.id $maps/17k.map $gfiles
+	    $bin/mrg2bgl 17k.id $maps/17k.map $gfiles
+	fi
+    fi
 }
 
 create-one-vcf(){
@@ -52,7 +61,11 @@ create-one-vcf(){
 # }
 
 merge-17k(){
+    light=red
+    
     prepare-17ka-dir
 
-    create-one-vcf
+    if [ $light==green ]; then
+	create-one-vcf
+    fi
 }

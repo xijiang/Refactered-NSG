@@ -35,13 +35,15 @@ i-n-g(){
 	 out=imp
 
     zcat imp.vcf.gz |
-	$bin/vcf2g |
-	$bin/vr1g >G.mat
-    zcat imp.vcf.gz |
 	head -30 |
 	grep CHROM |
 	tr '\t' '\n' |
 	tail -n+10 > list.id
+
+    zcat imp.vcf.gz |
+	$bin/vcf2g |
+	$bin/vr1g >G.mat
+
     cat G.mat |
 	$bin/g2-3c list.id >$gmat
 }

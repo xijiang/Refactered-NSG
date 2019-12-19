@@ -1,5 +1,3 @@
-Documentation for the NSG codes
-
 [toc]
 
 * by Xijiang Yu
@@ -8,7 +6,7 @@ Documentation for the NSG codes
 * Ås
 
 # Prerequisites
-1. `pigz`, `sudo dnf install pigz -y`. Note, `dnf` is for Fedora, CentOS 8. On CentOS 7, use `yum`. On Debian, Ubuntu, use `apt-get`.
+1. `pigz`, `sudo dnf install pigz -y`. Note dnf is for Fedora, CentOS 8. On CentOS 7, use `yum`. On Debian and Ubuntu, use `apt-get`.
 2. `g++`, the version should support standard 17
 3. `plink`, in `~/.local/bin`, and in `$PATH`.
 4. `julia`, version > 1.0, with package `Plots`, `Statistics`
@@ -179,38 +177,49 @@ Quality control of the 8k data follows the same file structure as 17k, except th
 
 You have to finish quality control and filtering procedures/pipelines on related genotype data before running this pipeline.
 
+[*Note: major revision 2019-12-18*]
+
 ```bash
-./run-pipeline.sh i+g fra to rst [id-list]
+./run-pipeline.sh i+g
 ```
 
-In the above options:
-- fra: the lower density genotypes. You can only specify `8k`, or `17k`
-- to: the higher density genotypes. You can only specify `17k`, or `606k`
-- Typically, `fra to` are `8k 17k`.
-- imputaion results will be written to `rst`.vcf.gz
-- You can specify an ID list for $\mathbf{G}$ calculation. `id-list` is the file name, which must be `work/i+g`.
-- File `rst.3c` will store a $\mathbf{G}$ matrix in 3-column format.
+### Reference, or the left most file
+It is decided to use 17k-$\alpha$ genotype only as reference currently. This can be modified in `parameters.sh`.
 
-All the results will be written in `i+g`.
+All results, including intermediate ones, will be written in `i+g`. 
+
+By default:
+- `list.id` stores the ID list
+- `G.mat` is $\mathbf{G}$ of binary storage
+- `gmat.3c` is $\mathbf{G}$ of plain text format.
 
 The 3 columns of $\mathbf{G}$ specifies the lower triangular elements of $\mathbf{G}$, i.e.:
 `id-1 id-2 element-value`
 and so on.
 
-### Example
+The current parameters for this pipeline is as below:
 ```bash
-./run-pipelinesh i+g 8k 17k rst
+## Imputation and G calculation
+wig=$work/i+g                   # work directory for imputaion and G calculation
+
+## We have 4 classes of genotypes to date: 8k, 17k-alpha, 17k-beta, and 606k
+## Genotype files to be imputed
+i8k=$g8k/ori.vcf.gz             # QC is removing too many ID and SNP
+i17b=$b17k/ori.vcf.gz           # not filtered
+i6dk=$g6dk/ori.vcf.gz           # can modify this to a filtered one
+
+## Reference files
+r17k=$a17k/flt/ref.vcf.gz
+
+##------------------------------------------------------------------------------
+## Specify files to be used for a big G matrix
+lref=$r17k                      # the left most reference file
+rinc="$i17b $i6dk $i8k"         # these will be left joined to above
+
+gmat="bigg.3c"
 ```
 
-The pipeline will seek `work/8k/flt/flt.vcf.gz` and `work/17k-alpha/flt/ref.vcf.gz` and merge them into `work/i+g/tmp.vcf.gz`. File `tmp.vcf.gz` will be over-written if exists. 
-
-Then Beagle will impute it and write the results into `rst.vcf.gz`. It will be over-written if exists.
-
-If file `id-list` exists, a subset of `rst.vcf.gz` is written to `g.vcf.gz` according to `id-list`. Otherwize, `g.vcf.gz` is soft linked to `rst-1.vcf.gz`. 
-
-File `rst.G` calculated from `g.vcf.gz` will store the $\mathbf{G}$ matrix in binary format. It is then converted to `rst.3c`, in 3-column format.
-
-Note, the current $\mathbf{G}$ is single-threaded, it may take 10-30 minutes to finish on 10k ID of 17k chip genotypes.
+The two parts of above specifications states the files that will be used for $\mathbf{G}$ calculation. The pipeline will first determine if the file exists. It then left join the reference file and files to be imputed one by one. After imputation, it will calculate `G.mat` and `bigg.3c`. You can name the later otherwise.
 
 ---
 
@@ -297,7 +306,7 @@ Management is similar to above.
 
 ## Codes
 
-All my relevant codes has a repo on https://github.com/xijiang/Refactored-NSG. Later, I will release my codes in format `v1.0`, `v2.2`, etc. You can later run below in `base`:
+All my relevant codes has a repo on https://github.com/xijiang/Refactered-NSG. Later, I will release my codes in format `v1.0`, `v2.2`, etc. You can later run below in `base`:
 
 ```bash
 ./run-pipeline.sh update

@@ -30,18 +30,25 @@ qcblksize=10			# this usually doesn't need change
 ##==============================================================================
 ## Quality control and filtering
 ##------------------------------------------------------------------------------
+nthreads=10
+
 ## 8k genotypes related
 g8k=$work/8k
 
 ### Quality control
-grpsz8k=50			# as 50*113 == 5650
+grpsz8k=54			# as 50*113 == 5650
 
 ##------------------------------------------------------------------------------
 ## 17k genotypes related
 a17k=$work/17k-alpha
 
 ### Quality control
-grpsz17k=44			# as 44*109 == 4796, the current n-ID
+grpsz17k=51			# before 44*109 == 4796. now 51x108.=5503
+refsz=4000			# use 4000 ID as reference to impute masked rest
+
+##------------------------------------------------------------------------------
+## 17k beta data
+b17k=$work/beta-17k
 
 ##------------------------------------------------------------------------------
 ## 606k genotypes related
@@ -54,14 +61,21 @@ grpsz6dk=23			# as 36*23 == 828
 ## Imputation and G calculation
 wig=$work/i+g			# work directory for imputaion and G calculation
 
-## Up to now, we have 3 classes of genotypes, i.e., 8k, 17k, and 606k
+## We have 4 classes of genotypes to date: 8k, 17k-alpha, 17k-beta, and 606k
 ## Genotype files to be imputed
-i8k=$g8k/flt/flt.vcf.gz
-i17k=$a17k/flt/flt.vcf.gz
+i8k=$g8k/ori.vcf.gz		# QC is removing too many ID and SNP
+i17b=$b17k/ori.vcf.gz		# not filtered
+i6dk=$g6dk/ori.vcf.gz		# can modify this to a filtered one
 
 ## Reference files
 r17k=$a17k/flt/ref.vcf.gz
-r6dk=$g6dk/flt/ref.vcf.gz
+
+##------------------------------------------------------------------------------
+## Specify files to be used for a big G matrix
+lref=$r17k			# the left most reference file
+rinc="$i17b $i6dk $i8k"		# these will be left joined to above
+
+gmat="bigg.3c"
 
 ##==============================================================================
 ## Other

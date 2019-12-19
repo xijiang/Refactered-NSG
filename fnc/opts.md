@@ -21,6 +21,8 @@
       - *q17*: quality control of the created VCF file
       - *f17*: filter out ID and SNP, which you **must specify manually**
       - *tlm*: test imputation from 8k to 17k.
+    - Dealing with 17k beta genotypes
+      - *b17*: convert the only file to vcf format
     - Dealing with genotypes with 606k chips
       - *m6d*: merge genotypes with 606k chips
       - *q6d*: quality control of elements in ID by SNP

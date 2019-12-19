@@ -12,12 +12,20 @@ prepare-data-8k() {
 	source $base/fnc/merge-8k-gt.sh
 	merge-8k-genotypes
     fi
-    if [ -d $qcd ]; then rm -rf $qcd; fi
+    if [ -d $qcd ]; then
+	response=
+	echo Are you sure that you want to re-run QC [yes / other]?
+	read response
+	if [ $response=="yes" ]; then
+	    rm -rf $qcd
+	    light=green
+	fi
+    fi
+    
     mkdir -p $qcd/rst
     cd $g8k
     if [ ! -f ref.vcf.gz ]; then
 	java -jar $bin/beagle.jar \
-	     nthreads=4 \
 	     gt=ori.vcf.gz \
 	     ne=$ne \
 	     out=ref
@@ -25,13 +33,16 @@ prepare-data-8k() {
 }
 
 quality-control-8k(){
+    light=red
     qcd=$g8k/qcd
 
     prepare-data-8k
-    cd $qcd
-    general-statisitcs
-    cd $qcd
-    stride-on-snp $grpsz8k
-    cd $qcd
-    qc-summarize
+    if [ $light == green ]; then
+	cd $qcd
+	general-statisitcs
+	cd $qcd
+	stride-on-snp $grpsz8k
+	cd $qcd
+	qc-summarize
+    fi
 }

@@ -39,6 +39,7 @@ else
 	    echo Filter out SNP and ID obtained from q8k
 	    mkdir -p $g8k/flt
 	    cd $g8k/flt
+	    exclude-list
 	    filter-id-snp
 	    ;;
 	#################### 17k genotypes
@@ -54,10 +55,17 @@ else
 	    echo Filter out SNP and ID obtained from q17
 	    mkdir -p $a17k/flt
 	    cd $a17k/flt
+	    exclude-list
 	    filter-id-snp
 	    ;;
 	tlm)
-	    echo test
+	    source fnc/test-8k-to-17k-flt.sh
+	    tlm-driver
+	    ;;
+	#################### 17k beta genotypes
+	b17)
+	    source fnc/b17k-ss.sh
+	    merge-17kb
 	    ;;
 	#################### 606k genotypes
 	m6d)
@@ -71,25 +79,15 @@ else
 	f6d)
 	    echo Filter out SNP and ID obtained from q6d
 	    mkdir -p $g6dk/flt
-	    cd $g6dk
+	    cd $g6dk/flt
+	    exclude-list
+	    filter-id-snp
 	    ;;
 	#################### imputation & G matrix
 	i+g)
-	    echo Imputation from low to high and calculate G
-	    if [ $# == 4 ] || [ $# == 5 ]; then
-		source fnc/imputation+G.sh
-
-		if [ $# == 4 ]; then
-		    i-n-g $2 $3 $4
-		else
-		    i-n-g $2 $3 $4 $5
-		fi
-	    else
-		show-help
-		exit 1
-	    fi
-	    
-	    # using only the filtered data
+	    echo Merge and impute, result in a G matrix in 3-c format
+	    source fnc/imputation+G.sh
+	    i-n-g
 	    ;;
 	*)
 	    show-help

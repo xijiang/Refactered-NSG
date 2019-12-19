@@ -1,5 +1,14 @@
 merge-8k-genotypes(){
-    if [ -d $g8k ]; then rm -rf $g8k; fi
+    if [ -d $g8k ]; then
+	response=
+	echo $g8k exists, are you sure you want to continue? [ yes / other ]
+	read response
+	if [ ! $response == yes ]; then
+	    return 1
+	fi
+    fi
+    
+    rm -rf $g8k
     mkdir -p $g8k/pre
     cd $g8k/pre
 
@@ -9,7 +18,7 @@ merge-8k-genotypes(){
     
     # make ID info and map ready
     tail -n+2 $ids/id.lst |
-	    gawk '{if(length($3)>2 && $9==10 && $7>1999) print $3, $2}' >idinfo
+	    gawk '{if(length($3)>2 && $9==10 && $7>1999 && length($4)<4) print $3, $2}' >idinfo
     
     $bin/mrg2bgl idinfo $maps/8k.map $gfiles
 

@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
   if(argc!=2){
     cerr<<"Usage:\n";
-    cerr<<"zcat chr.vcf.gz | " <<argv[0]<<" snp-list-not-to-be-masked\n";
+    cerr<<"zcat file.vcf.gz | " <<argv[0]<<" snp-list-NOT-to-be-masked\n";
     return 1;
   }
 

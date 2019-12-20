@@ -8,8 +8,10 @@ merge-6dk-genotypes(){
     ln -s $genotypes/600k/* .
     
     # make ID info and map ready
-    tail -n+2 $ids/id.lst |
-        gawk '{if(length($4)>2) print $4, $2}' >606k.id
+    cat id.lst |
+	gawk '{if($7>1999 && length($4)>2 && $9==10) print $4, $2}' >606k.id
+    cat id.lst |
+	gawk '{if($7<2000 && length($4)>2 && $8==1) print $4, $2}' >>606k.id
     
     $bin/mrg2bgl 606k.id $maps/606k.map $gfiles
 

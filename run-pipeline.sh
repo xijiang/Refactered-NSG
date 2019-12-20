@@ -89,6 +89,11 @@ else
 	    source fnc/imputation+G.sh
 	    i-n-g
 	    ;;
+	####################
+	qch)
+	    echo updating QC history
+	    update-qc-history
+	    ;;
 	*)
 	    show-help
 	    ;;

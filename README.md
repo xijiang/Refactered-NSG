@@ -173,6 +173,21 @@ Quality control of the 8k data follows the same file structure as 17k, except th
 ./run-pipeline.sh f6d`
 ```
 
+### Backup QC history
+
+```bash
+./run-pipeline.sh qch`
+```
+
+This pipeline will search `ID.qc` and `SNP.qc` in directory `17k-alpha`, `8k`, `606k`. If they exist, the pipeline will copy them to `log`. The birth seconds of the files since epoch are written into the file names. For example: `8k.1576685419.SNP`. One can use command:
+
+```bash
+date -d @1576674675 +%Y-%m-%d-%h
+# 2019-12-18-Dec
+```
+
+to see the date that the file was created.
+
 ## Imputation and **G** calculation
 
 You have to finish quality control and filtering procedures/pipelines on related genotype data before running this pipeline.

@@ -184,5 +184,22 @@ exclude-list(){
     fi
 }
 
+update-qc-history(){
+    cd $work
+    mkdir -p $hist
+    for chip in 17k-alpha 8k 606k; do
+	cd $chip/qcd/rst
+	if [ -f ID.qc ]; then
+	    sec=`stat -c %W ID.qc`
+	    cp ID.qc $hist/$chip.$sec.ID
+	fi
+	if [ -f SNP.qc ]; then
+	    sec=`stat -c %W ID.qc`
+	    cp SNP.qc $hist/$chip.$sec.SNP
+	fi
+	cd -
+    done
+}
+
 ##^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ########################################

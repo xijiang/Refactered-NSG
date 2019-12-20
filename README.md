@@ -2,7 +2,7 @@
 
 * by Xijiang Yu
 * Started: November, 2019.
-* Latest update: Decenber, 2019.
+* Latest update: December, 2019.
 * Ås
 
 # Prerequisites
@@ -182,8 +182,8 @@ Quality control of the 8k data follows the same file structure as 17k, except th
 This pipeline will search `ID.qc` and `SNP.qc` in directory `17k-alpha`, `8k`, `606k`. If they exist, the pipeline will copy them to `log`. The birth seconds of the files since epoch are written into the file names. For example: `8k.1576685419.SNP`. One can use command:
 
 ```bash
-date -d @1576674675 +%Y-%m-%d-%h
-# 2019-12-18-Dec
+date -d @1576674675 +%Y-%m-%d\ %H:%M
+# 2019-12-18 14:11
 ```
 
 to see the date that the file was created.

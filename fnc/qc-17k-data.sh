@@ -16,9 +16,10 @@ prepare-data() {
 	response=
 	echo Are you sure that you want to re-run QC [yes / other]?
 	read response
-	if [ $response=="yes" ]; then
+	if [ ! $response == "yes" ]; then
+	    light=red
+	else
 	    rm -rf $qcd;
-	    light=green
 	fi
     fi
     
@@ -33,7 +34,7 @@ prepare-data() {
 }
 
 quality-control-17k(){
-    light=red
+    light=green
     qcd=$a17k/qcd
     prepare-data
     if [ $light == green ]; then

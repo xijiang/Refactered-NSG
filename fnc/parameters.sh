@@ -22,6 +22,7 @@ ids=$dat/ids
 # work dir
 work=$base/work
 qcblksize=10			# this usually doesn't need change
+hist=$work/log			# store ID and SNP that failed QC in history
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ## Don't touch above

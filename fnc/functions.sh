@@ -171,14 +171,14 @@ exclude-list(){
     echo 
     if [ -f ../qcd/rst/ID.qc ]; then
 	sort -nk2 ../qcd/rst/ID.qc |
-	    gawk '{if($2>.2) print $1}' >>exclude.id
+	    gawk '{if($2>.2) print $1}' >exclude.id
     else
 	echo Have you run the QC pipeline?
     fi
     
     if [ -f ../qcd/rst/SNP.qc ]; then
 	sort -nk2 ../qcd/rst/SNP.qc |
-	    gawk '{if($2>.15) print $1}' >>exclude.snp
+	    gawk '{if($2>.15) print $1}' >exclude.snp
     else
 	echo Have you run the QC pipeline?
     fi

@@ -56,7 +56,7 @@ b17k=$work/beta-17k
 g6dk=$work/606k
 
 ### quality control
-grpsz6dk=23			# as 36*23 == 828
+grpsz6dk=12			# as 792 = 12x66
 
 ##==============================================================================
 ## Imputation and G calculation

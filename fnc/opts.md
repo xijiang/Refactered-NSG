@@ -27,6 +27,8 @@
       - *m6d*: merge genotypes with 606k chips
       - *q6d*: quality control of elements in ID by SNP
       - *f6d*: filter out ID and SNP, which you **must specify manually**
+    - Backup all the QC history
+      - *qch*: seach 17k-alpha, 8k, 606k for ID.qc and SNP.qc and back them up.
   - Imputation and G calculation
     - *i+g*: imputation from **filtered** genotypes to **filtered** and **phased** genotypes
       - The job is dealed in $work/i+g, with command:

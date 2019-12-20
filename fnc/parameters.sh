@@ -68,6 +68,7 @@ i17b=$b17k/ori.vcf.gz		# not filtered
 i6dk=$g6dk/ori.vcf.gz		# can modify this to a filtered one
 
 ## Reference files
+#-- remove '/flt' away for unfiltered genotype file
 r17k=$a17k/flt/ref.vcf.gz
 
 ##------------------------------------------------------------------------------

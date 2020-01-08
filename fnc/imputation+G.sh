@@ -32,7 +32,7 @@ i-n-g(){
 	 nthreads=$nthreads \
 	 gt=gt.vcf.gz \
 	 ne=$ne \
-	 out=imp
+	 out=imp >/dev/null
 
     zcat imp.vcf.gz |
 	head -30 |

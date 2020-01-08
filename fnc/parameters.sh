@@ -21,7 +21,7 @@ ids=$dat/ids
 
 # work dir
 work=$base/work
-qcblksize=10			# this usually doesn't need change
+qcblksize=8			# this usually doesn't need change
 hist=$work/log			# store ID and SNP that failed QC in history
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -31,7 +31,9 @@ hist=$work/log			# store ID and SNP that failed QC in history
 ##==============================================================================
 ## Quality control and filtering
 ##------------------------------------------------------------------------------
-nthreads=10
+nthreads=12
+nrepeats=20
+ngroups=8			# for quality control
 
 ## 8k genotypes related
 g8k=$work/8k

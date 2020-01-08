@@ -80,28 +80,44 @@ general-statisitcs(){		# on missing data
     rm tmp
 }
 
+make-qc-groups(){
+    # This funciton will divide the ID into 20 or 21 groups.
+    # If the 21st groups has less ID than the rest, it is removed
+    # Then there will be 20 groups to be tested.
+    
+    nid=`wc id.lst | gawk '{print $1}'`
+    let grpsz=$nid/$ngroups
+    let ntest=$grpsz*$ngroups
+    
+    if [ -d tmp ]; then rm -rf tmp; fi
+    for i in `seq -w $nrepeats`; do
+	mkdir -p tmp/$i
+	cd tmp/$i
+	cat ../../id.lst |
+	    shuf |
+	    split -l $grpsz
+	if [ $ntest -ne $nid ]; then
+	    rm `ls x* | tail -1` # The last one is usually smaller than the rest
+	fi
+	cd -
+    done
+}
 
 stride-on-snp(){
-    if [ -d tmp ]; then rm -rf tmp; fi
-    mkdir -p tmp
-    cd tmp
-    cat ../id.lst |
-	shuf |
-	split -l $1		# on group size
-
     msksnp=0
     for grp in x*; do
 	echo
+	date +%Z\ %F\ %T
 	echo Dealing with file $grp
-	zcat ../../ori.vcf.gz |
+	zcat $qcd/../ori.vcf.gz |
 	    $bin/vcf-by-id $grp |
 	    $bin/msk-ith $msksnp $qcblksize |
 	    gzip -c >msk.vcf.gz
-	cat $grp ../id.lst |
+	cat $grp $qcd/id.lst |
 	    sort |
 	    uniq -c |
 	    gawk '{if($1==1) print $2}' >ref
-	zcat ../../ref.vcf.gz |
+	zcat $qcd/../ref.vcf.gz |
 	    $bin/vcf-by-id ref |
 	    gzip -c >ref.vcf.gz
 
@@ -110,14 +126,16 @@ stride-on-snp(){
 	     ref=ref.vcf.gz \
 	     gt=msk.vcf.gz \
 	     ne=$ne \
-	     out=imp
+	     out=imp >/dev/null
 
-	zcat ../../ref.vcf.gz |
+	mv imp.log $grp.log
+
+	zcat $qcd/../ref.vcf.gz |
 	    $bin/vcf-by-id $grp |
 	    $bin/extrgt imputed.snp >cmp.gt
 	zcat imp.vcf.gz |
 	    $bin/extrgt imputed.snp >imp.gt
-	tar jcvf ../rst/$grp.tar.bz2 cmp.gt imp.gt $grp
+	tar jcvf $qcd/rst/$1.$grp.tar.bz2 cmp.gt imp.gt $grp
 
 	let msksnp=msksnp+1
 	let msksnp=msksnp%$qcblksize
@@ -126,15 +144,49 @@ stride-on-snp(){
 
 qc-summarize(){
     cd rst
+
     if [ -f summary.txt ]; then rm summary.txt; fi
-    for i in *bz2; do
-	tar xvf $i
-	grp=`echo $i | gawk -F. '{print $1}'`
-	$bin/qc-2d cmp.gt imp.gt $grp >>summary.txt
-	rm cmp.gt imp.gt $grp
+    if [ -f allsum.txt ]; then rm allsum.txt; fi
+
+    for i in `seq -w $nrepeats`; do
+	for j in $i.*; do
+	    tar xvf $j
+	    grp=`echo $j | gawk -F. '{print $2}'`
+	    $bin/qc-2d cmp.gt imp.gt $grp >>summary.txt
+	    rm cmp.gt imp.gt $grp
+	done
+	cat summary.txt |
+	    $bin/qc-2d-sum
+	mv ID.qc $i.ID.qc
+	mv SNP.qc $i.SNP.qc
+	cat summary.txt >> allsum.txt
+	rm summary.txt
     done
 
-    cat summary.txt | $bin/qc-2d-sum
+    for i in `seq -w $nrepeats`; do
+	cat $i.ID.qc |
+	    sort -nk2 |
+	    tail -20 >>rid.txt
+	gawk '{if($2>.15) print $1}' $i.SNP.qc >>rsnp.txt
+    done
+
+    cat rid.txt |
+	gawk '{print $1}' |
+	sort |
+	uniq -c |
+	sort -nk1 >id.tab
+
+    cat rsnp.txt |
+	gawk '{print $1}' |
+	sort |
+	uniq -c |
+	sort -nk1 >snp.tab
+
+    cat allsum.txt |
+	$bin/qc-2d-sum
+    mv ID.qc overall-id.qc
+    mv SNP.qc overall-snp.qc
+    rm allsum.txt
 }
 
 filter-id-snp(){
@@ -147,7 +199,7 @@ filter-id-snp(){
     fi
 
     touch exclude.{snp,id}	# empty if not specified before
-    comm -23 <(sort ../qcd/id.lst) <(sort exclude.id) >keep.id
+    comm -23 <(sort ../qcd/id.lst)  <(sort exclude.id)  >keep.id
     comm -23 <(sort ../qcd/snp.lst) <(sort exclude.snp) >keep.snp
     
     zcat ../ori.vcf.gz |
@@ -165,20 +217,20 @@ filter-id-snp(){
 
 exclude-list(){
     echo
-    echo Note: exclude.id and exclude.snp will be created.
+    echo Note: only exclude.snp will be created at this stage.
     echo If you have other ID and SNP to be excluded,
-    echo you have to specify them before this procedure.
-    echo 
-    if [ -f ../qcd/rst/ID.qc ]; then
-	sort -nk2 ../qcd/rst/ID.qc |
-	    gawk '{if($2>.2) print $1}' >exclude.id
-    else
-	echo Have you run the QC pipeline?
-    fi
+    echo you can append them to exclude.id and/or exclude.snp before this procedure.
+    echo
+    # And since current QC won't repeat on ID
+    # below are disabled.  But no ID can be listed at the current stage anyway.
+    # if [ -f ../qcd/rst/overall-id.qc ]; then
+    #  	gawk '{if($2>.2) print $1}' ../qcd/rst/overall-id.qc >exclude.id
+    # else
+    # 	echo Have you run the QC pipeline?
+    # fi
     
-    if [ -f ../qcd/rst/SNP.qc ]; then
-	sort -nk2 ../qcd/rst/SNP.qc |
-	    gawk '{if($2>.15) print $1}' >exclude.snp
+    if [ -f ../qcd/rst/overall-snp.qc ]; then
+	gawk '{if($2>.15) print $1}' ../qcd/rst/overall-snp.qc >exclude.snp
     else
 	echo Have you run the QC pipeline?
     fi

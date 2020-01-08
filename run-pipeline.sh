@@ -58,10 +58,10 @@ else
 	    exclude-list
 	    filter-id-snp
 	    ;;
-	tlm)
-	    source fnc/test-8k-to-17k-flt.sh
-	    tlm-driver
-	    ;;
+	# tlm)
+	#     source fnc/test-8k-to-17k-flt.sh
+	#     tlm-driver
+	#     ;;
 	#################### 17k beta genotypes
 	b17)
 	    source fnc/b17k-ss.sh

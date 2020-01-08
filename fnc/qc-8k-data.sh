@@ -1,17 +1,19 @@
-# There might be some ID whose genotypes are just weird
-# Here, I test the ID genotyped with 17k chips one-by-one.
-# I mask their every fourth locus, and then impute them back.
-# In four round, every locus was masked and imputed back once.
-# I then calculate the genotype imputation errors
-# and then rank all the ID according to these errors
-# Currently I run this for physical map version 3
-# But This will be a general test procedure, and should work smoothly on version 4.
+# for the 8k LD genotypes
 
 prepare-data-8k() {
     if [ ! -d $g8k ]; then
 	source $base/fnc/merge-8k-gt.sh
 	merge-8k-genotypes
     fi
+    
+    cd $g8k
+    if [ ! -f ref.vcf.gz ]; then
+	java -jar $bin/beagle.jar \
+	     gt=ori.vcf.gz \
+	     ne=$ne \
+	     out=ref >log/ref.log
+    fi
+
     if [ -d $qcd ]; then
 	response=
 	echo Are you sure that you want to re-run QC [yes / other]?
@@ -22,15 +24,6 @@ prepare-data-8k() {
 	    rm -rf $qcd
 	fi
     fi
-    
-    mkdir -p $qcd/rst
-    cd $g8k
-    if [ ! -f ref.vcf.gz ]; then
-	java -jar $bin/beagle.jar \
-	     gt=ori.vcf.gz \
-	     ne=$ne \
-	     out=ref
-    fi
 }
 
 quality-control-8k(){
@@ -39,10 +32,22 @@ quality-control-8k(){
 
     prepare-data-8k
     if [ $light == green ]; then
+	mkdir -p $qcd/{rst,log}
 	cd $qcd
+	
 	general-statisitcs
-	cd $qcd
-	stride-on-snp $grpsz8k
+	make-qc-groups
+	for rpt in `seq -w $nrepeats`; do
+	    echo
+	    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+	    echo Dealing with repeat $rpt
+	    echo
+	    cd $qcd/tmp/$rpt
+	    stride-on-snp $rpt
+	    for flog in *.log; do
+		mv $flog ../../log/$rpt.$flog
+	    done
+	done
 	cd $qcd
 	qc-summarize
     fi

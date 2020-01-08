@@ -23,6 +23,9 @@ int main(int argc, char *argv[])
   }
 
   ofstream foo("SNP.qc");
+  foo<<fixed;
+  foo.precision(12);
+  
   for(auto&[snp, t]:SNP){
     auto&[cnt, err] = t;
     foo<<snp<<' '<<err/cnt<<'\n';
@@ -30,6 +33,9 @@ int main(int argc, char *argv[])
   foo.close();
 
   foo.open("ID.qc");
+  foo<<fixed;
+  foo.precision(12);
+
   for(auto&[id, t]:ID){
     auto&[cnt, err] = t;
     foo<<id<<' '<<err/cnt<<'\n';

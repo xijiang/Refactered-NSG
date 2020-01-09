@@ -9,7 +9,7 @@ merge-8k-genotypes(){
     fi
     
     rm -rf $g8k
-    mkdir -p $g8k/pre
+    mkdir -p $g8k/{pre,log}
     cd $g8k/pre
 
     # link the available genotype files here

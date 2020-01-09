@@ -1,6 +1,6 @@
 merge-6dk-genotypes(){
     if [ -d $g6dk ]; then rm -rf $g6dk; fi
-    mkdir -p $g6dk/pre
+    mkdir -p $g6dk/{pre,log}
     cd $g6dk/pre
 
     # link the available genotype files here

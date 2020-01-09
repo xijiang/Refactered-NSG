@@ -15,7 +15,7 @@ prepare-17ka-dir(){
     fi
 
     if [ $light==green ]; then
-	mkdir -p $a17k/pre
+	mkdir -p $a17k/{pre,log}
 	cd $a17k/pre
 
 	# link the available genotype files here

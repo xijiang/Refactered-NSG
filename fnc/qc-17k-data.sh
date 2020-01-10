@@ -2,7 +2,7 @@
 
 prepare-data() {
     if [ ! -d $a17k ]; then
-	source $base/fnc/merge-17k-gt-in-design-format.sh
+	source $base/fnc/merge-17k-gt.sh
 	merge-17k
     fi
 

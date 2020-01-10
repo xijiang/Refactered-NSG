@@ -11,7 +11,7 @@ prepare-data() {
 	java -jar $bin/beagle.jar \
 	     gt=ori.vcf.gz \
 	     ne=$ne \
-	     out=ref
+	     out=ref >log/ref.log
     fi
 
     if [ -d $qcd ]; then

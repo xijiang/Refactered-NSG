@@ -149,7 +149,7 @@ qc-summarize(){
     if [ -f allsum.txt ]; then rm allsum.txt; fi
 
     for i in `seq -w $nrepeats`; do
-	for j in $i.*; do
+	for j in $i.*.bz2; do
 	    tar xvf $j
 	    grp=`echo $j | gawk -F. '{print $2}'`
 	    $bin/qc-2d cmp.gt imp.gt $grp >>summary.txt

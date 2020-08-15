@@ -31,7 +31,7 @@ hist=$work/log			# store ID and SNP that failed QC in history
 ##==============================================================================
 ## Quality control and filtering
 ##------------------------------------------------------------------------------
-nthreads=12
+nthreads=20
 nrepeats=20
 ngroups=8			# for quality control
 

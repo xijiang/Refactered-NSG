@@ -13,6 +13,11 @@
 5. `pandoc`, to convert md to manual
 6. `most`, for colored manual
 
+# Update
+## 2020-07-06
+- Added codes to `merge`, `QC` and `filter` 17k$\gamma$ data.
+- Reuse of previous imputation results.
+
 # Set up a working evironment
 
 ## Obtain the codes
@@ -283,25 +288,26 @@ git commit -am '17k genotype JCM3786'
 git push orgin master
 ```
 
-You man add 25k directory and genotypes later in this way.
+You can add 25k directory and genotypes later in this way.
 
 #### Update ID info
 The current ID specification format was decide by Jette. It includes a header. The columns are as below:
 
 | Column | Item |
 | --: | -- |
-|  1 | Herdbook_number |
-|  2 | AnimalID	       |
-|  3 | SampleID_LD     |
-|  4 | SampleID_HD     |
-|  5 | SampleID_17Kbeta|
-|  6 | SampleID_17K    |
-|  7 | BirthYear       |
-|  8 | BreedGroup      |
-|  9 | Breed	       |
-| 10 | Gender          |
+|  1 | Herdbook_number   |
+|  2 | AnimalID	         |
+|  3 | SampleID_LD       |
+|  4 | SampleID_HD       |
+|  5 | SampleID_17Kbeta  |
+|  6 | SampleID_17K      |
+|  7 | BirthYear         |
+|  8 | BreedGroup        |
+|  9 | Breed	         |
+| 10 | Gender            |
+| 11 | SampleID_17Kgamma |
 
-The current file is `id-info-2019-07.txt`. A soft link `id.lst` is pointing to this file.
+The current file is `genomiclink.txt`. A soft link `id.lst` is pointing to this file.
 
 Later when genotypes with new chips, e.g., 25k chip, comes. The program need some modifification for new format of `id.lst`. Also `id.lst` should always point to the news version of ID info file.
 

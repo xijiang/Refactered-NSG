@@ -44,7 +44,7 @@ show-help(){
 	    echo Please install $prg
 	fi
     done
-    pandoc -st man fnc/opts.md |
+    pandoc -st man $1 |
 	groff -T utf8 -man |
 	most
 }
